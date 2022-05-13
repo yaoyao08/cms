@@ -1,5 +1,7 @@
-import React from "react";
+import React, { Component } from "react";
 
-export default function PaperList() {
-  return <div>List</div>;
+export default class PaperList extends Component {
+  render() {
+    return <div>PaperList</div>;
+  }
 }

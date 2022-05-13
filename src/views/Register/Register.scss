@@ -1,0 +1,49 @@
+.login-bg {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  background-image: url("../../assets/imgs/bg3.jpg");
+  background-size: cover;
+  .log {
+    margin: auto;
+    background-image: url("../../assets/imgs/bg.jpg");
+    width: 450px;
+    height: 320px;
+    box-shadow: 0 4px 16px rgba(48, 55, 66, 0.15);
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -ms-border-radius: 20px;
+    -o-border-radius: 20px;
+    background-color: white;
+    padding: 10px;
+    color: white;
+    text-align: center;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS";
+    .item {
+      font-weight: bolder;
+      width: 85%;
+      margin: auto;
+      margin-top: 20px;
+      .value {
+        border-radius: 7px;
+        width: 100%;
+      }
+    }
+
+    .tip {
+      width: 100%;
+      justify-content: center;
+      margin-top: 10px;
+
+      .login-btn {
+        margin-right: 10px;
+        border-radius: 8px;
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        -ms-border-radius: 8px;
+        -o-border-radius: 8px;
+      }
+    }
+  }
+}

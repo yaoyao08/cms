@@ -1,5 +1,7 @@
-import React from "react";
+import React, { Component } from "react";
 
-export default function Material() {
-  return <div>Material</div>;
+export default class Material extends Component {
+  render() {
+    return <div>Material</div>;
+  }
 }
