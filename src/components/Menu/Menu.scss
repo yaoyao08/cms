@@ -1,0 +1,18 @@
+.menu {
+  width: 100%;
+  height: 100%;
+  .content {
+    background-image: linear-gradient(135deg, #72edf2 10%, #5151e5 100%);
+  }
+}
+.ant-menu-submenu > .ant-menu {
+  background-image: linear-gradient(135deg, #3c8ce7 10%, #00eaff 100%);
+}
+.ant-menu-item-active {
+  background-color: #317cd7 !important;
+  color: #fff !important;
+}
+.ant-menu-item-selected {
+  background-image: linear-gradient(0deg, #3c8ce7 10%, #00eaff 100%);
+  color: white !important;
+}

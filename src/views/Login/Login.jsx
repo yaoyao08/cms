@@ -1,19 +1,45 @@
-import { Form, Input, Button, Checkbox, Row, Col } from "antd";
+import { Form, Input, Button, Checkbox, Row, Col, message } from "antd";
 import React, { Component } from "react";
 import "./Login.scss";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { postRequest } from "../../api";
+import { NavTo } from "../../utils/navTo";
 export default class Login extends Component {
-  state = {};
+  constructor(props) {
+    super(props);
+    this.password = window.localStorage.getItem("password") || "";
+    this.username = window.localStorage.getItem("username") || "";
+    this.state = {
+      isChecked: window.localStorage.getItem("password") ? true : false,
+    };
+  }
+
   onFinish = (values) => {
+    if (this.state.isChecked) {
+      window.localStorage.setItem("username", values.username);
+      window.localStorage.setItem("password", values.password);
+    }
     postRequest("/user/login", values).then((res) => {
       console.log(res);
+      if (res.data.message === "登录成功") {
+        sessionStorage.setItem("token", res.data.token);
+        message.success(res.data.message);
+        NavTo("/");
+      } else {
+        message.error(res.message);
+      }
     });
+
     console.log("Success:", values);
   };
   onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
+  };
+  handleSetPassword = (e) => {
+    this.setState(() => ({
+      isChecked: e.target.checked,
+    }));
   };
   render() {
     return (
@@ -37,6 +63,7 @@ export default class Login extends Component {
           <h2>欢迎登陆</h2>
           <Form.Item
             className="item"
+            initialValue={this.username}
             name="username"
             wrapperCol={{
               span: 24,
@@ -59,6 +86,7 @@ export default class Login extends Component {
           <Form.Item
             className="item"
             name="password"
+            initialValue={this.password}
             wrapperCol={{
               span: 24,
             }}
@@ -89,7 +117,13 @@ export default class Login extends Component {
             <Row gutter={18}>
               <Col span={20}>
                 <Form.Item className="item2">
-                  <Checkbox style={{ color: "white" }}>记住</Checkbox>
+                  <Checkbox
+                    style={{ color: "white" }}
+                    checked={this.state.isChecked}
+                    onClick={this.handleSetPassword}
+                  >
+                    记住
+                  </Checkbox>
                 </Form.Item>
               </Col>
               <Col span={4}>

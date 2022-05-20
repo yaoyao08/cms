@@ -2,18 +2,17 @@ import axios from "axios";
 
 const baseUrl = "";
 const options = {
-  timeout: 5000,
-  headers: {
-    Authorization: window.sessionStorage.getItem("token") || "",
-  },
+  timeout: 20000,
 };
 const instance = axios.create(options);
-
+const token = sessionStorage.getItem("token") || "";
 /**
  * 请求拦截器
  */
 instance.interceptors.request.use(
   (config) => {
+    //如果存在token，请求携带这个token
+    config.headers["Authorization"] = token;
     return config;
   },
   (err) => {
@@ -26,6 +25,21 @@ instance.interceptors.request.use(
  */
 instance.interceptors.response.use(
   (res) => {
+    if (res.status)
+      if (res.status.toString().startsWith("2")) return { data: res.data };
+      else if (res.status.toString().startsWith("3"))
+        return {
+          message: "url已被重定向",
+          data: res.data,
+        };
+      else if (res.status.toString().startsWith("4"))
+        return {
+          message: "请求错误！",
+        };
+      else if (res.status.toString().startsWith("5"))
+        return {
+          message: "服务器错误！无法完成请求",
+        };
     return res;
   },
   (err) => {
@@ -40,7 +54,7 @@ instance.interceptors.response.use(
  * @returns
  */
 export const getRequest = (url, params) => {
-  return axios({
+  return instance({
     method: "get",
     url: `${baseUrl}${url}`,
     data: params,
@@ -53,21 +67,21 @@ export const getRequest = (url, params) => {
  * @returns
  */
 export const postRequest = (url, params) => {
-  return axios({
+  return instance({
     method: "post",
     url: `${baseUrl}${url}`,
     data: params,
   });
 };
 export const putRequest = (url, params) => {
-  return axios({
+  return instance({
     method: "put",
     url: `${baseUrl}${url}`,
     data: params,
   });
 };
 export const deleteRequest = (url, params) => {
-  return axios({
+  return instance({
     method: "delete",
     url: `${baseUrl}${url}`,
     data: params,

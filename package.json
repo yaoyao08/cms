@@ -8,10 +8,15 @@
     "@testing-library/user-event": "^13.5.0",
     "antd": "^4.20.4",
     "axios": "^0.27.2",
+    "babel-runtime": "^6.26.0",
+    "element-react": "^1.4.34",
+    "element-theme-default": "^1.4.13",
+    "i": "^0.3.7",
     "less": "^4.1.2",
     "less-loader": "^6.0.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-hot-loader": "^4.5.3",
     "react-redux": "^8.0.1",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
@@ -43,7 +48,9 @@
     ]
   },
   "devDependencies": {
+    "@babel/runtime": "^7.18.0",
     "node-sass": "^7.0.1",
     "sass-loader": "^12.6.0"
-  }
+  },
+  "proxy": "http://124.222.74.127:9090"
 }
