@@ -25,9 +25,8 @@ export default function TopTool(props) {
             bordered={false}
           />
           <Select style={{ width: 120 }} onSelect={props.handleSelect1}>
-            {props.selector1.map((item) => (
-              <Option value={item} />
-            ))}
+            {props.selector1 &&
+              props.selector1.map((item) => <Option value={item} />)}
           </Select>
         </Input.Group>
         <Input.Group compact className="item">
@@ -38,9 +37,8 @@ export default function TopTool(props) {
             bordered={false}
           />
           <Select style={{ width: 120 }} onSelect={props.handleSelect2}>
-            {props.selector2.map((item) => (
-              <Option key={item} value={item} />
-            ))}
+            {props.selector2 &&
+              props.selector2.map((item) => <Option key={item} value={item} />)}
           </Select>
         </Input.Group>
       </div>

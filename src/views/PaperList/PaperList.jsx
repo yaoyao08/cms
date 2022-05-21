@@ -5,6 +5,13 @@ import { getRequest } from "../../api";
 export default class PaperList extends Component {
   constructor(props) {
     super(props);
+    this.init();
+    this.state = {
+      tableData: [],
+    };
+  }
+  init() {
+    this.loading = true;
     this.mainClasses = [
       "class1",
       "class2",
@@ -23,12 +30,10 @@ export default class PaperList extends Component {
     ];
     this.maintype = "";
     this.subtype = "";
-    this.state = {
-      tableData: [],
-    };
   }
   getData = () => {
     getRequest("/popup/listArea").then((res) => {
+      this.loading = false;
       this.setState(() => ({
         tableData: res.data,
       }));
@@ -58,7 +63,7 @@ export default class PaperList extends Component {
           handleSelect2={this.handleSelectSubType}
           search={this.handleSearch}
         ></TopTool>
-        <List loading={false} data={this.state.tableData}></List>
+        <List loading={this.loading} data={this.state.tableData}></List>
       </div>
     );
   }
