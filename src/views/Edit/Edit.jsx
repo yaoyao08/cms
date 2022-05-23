@@ -1,24 +1,19 @@
-import React from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Button } from "antd";
-
-function Edit(props) {
-  const handleClick = () => {
-    props.sendAction();
+import { mapDispatchToProps } from "../../utils/decrators";
+@connect(null, mapDispatchToProps)
+export default class Edit extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  handleClick = () => {
+    this.props.sendAction();
   };
-  return (
+  return() {
     <div>
-      <Button onClick={handleClick}>测试</Button>
-    </div>
-  );
+      <Button onClick={this.handleClick}>测试</Button>
+    </div>;
+  }
 }
-const mapDispatchToProps = (dispatch) => {
-  return {
-    sendAction: () => {
-      dispatch({
-        type: "send_test",
-      });
-    },
-  };
-};
-export default connect(null, mapDispatchToProps)(Edit);

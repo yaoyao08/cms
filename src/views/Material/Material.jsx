@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import TopTool from "../../components/public/TopTool/TopTool";
-class Material extends Component {
+import { reciveDataFromState } from "../../utils/decrators";
+
+@connect(reciveDataFromState)
+export default class Material extends Component {
   render() {
     return (
       <div>
@@ -17,8 +20,3 @@ class Material extends Component {
     );
   }
 }
-const reciveDataFromState = (state) => {
-  console.log(state);
-  return state;
-};
-export default connect(reciveDataFromState)(Material);
