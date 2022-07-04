@@ -31,6 +31,7 @@ export default class PaperList extends Component {
     this.maintype = "";
     this.subtype = "";
   }
+
   getData = () => {
     getRequest("/popup/listArea").then((res) => {
       this.loading = false;
@@ -51,7 +52,8 @@ export default class PaperList extends Component {
     this.subtype = value;
   };
   componentDidMount() {
-    this.getData();
+    // this.getData();
+    this.test1();
   }
   render() {
     return (
