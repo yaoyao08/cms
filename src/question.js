@@ -343,10 +343,6 @@ export function findIdx(matrix, target) {
 }
 /**
  * 给你一个整数数组 nums ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
- */
-
-/**
- *
  * @param {Array<number>} nums
  * @returns {number}
  */
@@ -385,9 +381,9 @@ export const numIslands = (grid) => {
 function turnZero(i, j, grid) {
   if (
     i < 0 ||
-    i >= grid.length ||
+    i >= grid.length - 1 ||
     j < 0 ||
-    j >= grid[0].length ||
+    j >= grid[0].length - 1 ||
     grid[i][j] === "0"
   )
     return;
@@ -435,9 +431,9 @@ function turn2Zero(queue, grid) {
       const y = cur[1] + dir[1];
       if (
         x < 0 ||
-        x >= grid.length ||
+        x >= grid.length - 1 ||
         y < 0 ||
-        y >= grid[0].length ||
+        y >= grid[0].length - 1 ||
         grid[x][y] !== "1"
       ) {
         continue;
@@ -607,7 +603,7 @@ export function permute(nums) {
  */
 function computePremute(n) {
   if (n === 1) return 1;
-  else return n + computePremute(n - 1);
+  else return n * computePremute(n - 1);
 }
 
 //
@@ -748,7 +744,7 @@ export function convert(str, rows) {
   return out;
 }
 /**
- * 实现一个对象的 flatten 方法
+ * 实现一个对象的 flatten 方法，同样可以做深拷贝的方法
  * @param {Object} obj
  */
 export function flatten(obj, hash = new Set(), result = {}) {
@@ -810,11 +806,16 @@ export function maxSubStr(str) {
  */
 export function twoSum(nums, target) {
   if (nums.length < 2) return null;
+  const res = [];
   for (let i = 0; i < nums.length; i++) {
     let index = nums.indexOf(target - nums[i]);
-    if (index !== -1 && index !== i) return [i, index];
+    if (index !== -1 && index !== i)
+      res.push([Math.max(i, index), Math.min(i, index)]);
   }
-  return null;
+  return res;
+}
+function isSame(nums1, nums2) {
+  if (nums1[0] === nums2[0] && nums1[1] === nums2[1]) return true;
 }
 /**
  * 解析一个url，并生成window.location对象包含的域
