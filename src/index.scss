@@ -6,3 +6,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+$color: darken(black, 20%);
+@mixin test($color: #efefef) {
+  background-color: #{$color};
+}
+.test {
+  @include test();
+  @extend .code, .danger;
+}
+@if $color==#565656 {
+  $colors: #565656, #efefef, #ffffff;
+  @for $color from 1 through 80 {
+  }
+  @media screen {
+  }
+}

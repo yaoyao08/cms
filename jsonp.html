@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div>111</div>
+  </body>
+  <script type="text/javascript">
+    function jsonP(url, data, callback) {
+      const getSrc = (url, data, callback) => {
+        url += "?";
+        Object.keys(data).forEach((key) => {
+          url += `${key}=${data[key]}&`;
+        });
+        url += `callback=${callback}`;
+        return url;
+      };
+      const src = getSrc(url, data, callback);
+      console.log(src);
+      return new Promise((resolve, reject) => {
+        const jsp = document.createElement("script");
+        jsp.setAttribute("src", src);
+        document.body.appendChild(jsp);
+        window[callback] = (params) => {
+          resolve(params);
+          document.body.removeChild(jsp);
+        };
+      });
+    }
+
+    jsonP("http://localhost:8080/api/jsonp", { id: 1 }, "callback").then(
+      (res) => {
+        console.log(res);
+      }
+    );
+  </script>
+</html>

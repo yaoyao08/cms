@@ -141,3 +141,23 @@ export function bubleSort(arr) {
   }
   return arr;
 }
+/**
+ * 堆排序
+ * 维护单调递减堆，每次判断堆顶元素是否小于当前数组元素
+ * 如果小于数组元素则把堆排空然后置入当前元素
+ */
+export function stackSort(nums) {
+  let stack = [];
+  for (let i = 0; i < nums.length; i++) {
+    const current = nums[i],
+      small = [];
+    while (stack.length && stack[stack.length - 1] < current) {
+      small.push(stack.pop());
+    }
+    stack.push(current);
+    while (small.length) {
+      stack.push(small.pop());
+    }
+  }
+  return stack;
+}

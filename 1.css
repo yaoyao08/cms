@@ -1,0 +1,20 @@
+body {
+  --top: 20px;
+  margin: var(--top);
+}
+/* 单行文本溢出省略*/
+.single {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; /* 不换行*/
+}
+/* 多行文本溢出省略*/
+.multi {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  background-color: lightblue;
+  cursor: pointer;
+}
