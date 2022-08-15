@@ -80,7 +80,7 @@ export const postOrder = (root, temp) => {
 };
 
 /**
- * 层次遍历
+ * 层序遍历
  * @param {TreeNode} root
  */
 export function levelOrder(root) {
@@ -644,7 +644,7 @@ export function permute_(nums) {
     // 遍历到叶子结点了，可以返回了
     if (depth === len) {
       result.push([...path]);
-      return
+      return;
     }
 
     for (let i = 0; i < len; i++) {
@@ -816,6 +816,20 @@ export function flatten2(obj, key = "", res = {}, isArray = false) {
     }
   }
   return res;
+}
+/**
+ * 数组扁平化处理
+ * @param {*} arr
+ */
+export function flattenArr(arr) {
+  const result = arr.flat(Infinity); // 直接调用api
+  // 法二
+  return arr.reduce((pre, cur) => {
+    console.log("pre", pre); //表示上一次调用回调时的返回值，或者初始值;
+    console.log("cur", cur); // 表示当前正在处理的数组元素
+    return pre.concat(Array.isArray(cur) ? flatten(cur) : cur);
+  }, []);
+  // 或者直接递归
 }
 
 function isObj(obj) {
@@ -1350,7 +1364,7 @@ export function maxK(nums, k) {
  * 手写Promise
  */
 export class _Promise {
-  static const PENDING = "PENDING";
+  static PENDING = "PENDING";
   static FULFILLED = "FULFILLED";
   static REJECTED = "REJECTED";
   constructor(executor) {
@@ -1550,31 +1564,386 @@ Function.prototype._bind = function (ctx, ...args) {
  * 给定数组中的n数之和为target
  */
 /**
- * 
- * @param {Array<number>} nums 
- * @param {number} N 
+ *
+ * @param {Array<number>} nums
+ * @param {number} N
  */
-export function SumN(nums,N,target){
-  let result=[],len = nums.length,visited = new Array(len).fill(false)
-  nums.sort((a,b)=>a-b)
-  const dfs = (nums, len, depth, path)=>{
-    if(target==0&&depth==N) {
-      result.push([...path])
-      return
+export function SumN(nums, N, target) {
+  let result = [],
+    len = nums.length,
+    visited = new Array(len).fill(false);
+  nums.sort((a, b) => a - b);
+  const dfs = (nums, len, depth, path) => {
+    if (target === 0 && depth === N) {
+      result.push([...path]);
+      return;
+    } else if (depth === len) {
+      return;
     }
-    else if(depth===len){
-      return
+    for (let i = 0; i < len; i++) {
+      path.push(nums[i]);
+      target -= nums[i];
+      visited[i] = true;
+      dfs(nums, len, depth + 1, path);
+      visited[i] = false;
+      path.pop();
+      target += nums[i];
     }
-    for(let i=0;i<len;i++){
-      path.push(nums[i])
-      target-=nums[i]
-      visited[i]=true
-      dfs(nums,len,depth+1,path)
-      visited[i]=false
-      path.pop()
-      target+=nums[i]
+  };
+  dfs(nums, len, 0, []);
+  return result;
+}
+/**
+ * 闭包创建单例模式
+ */
+export function singleInstance() {
+  let Head = (function () {
+    let HeadClass = function () {};
+    let instance;
+    return function () {
+      if (instance) return instance;
+      else {
+        instance = new HeadClass();
+        return instance;
+      }
+    };
+  })();
+  let a = Head(),
+    b = new Head();
+  console.log(a === b);
+}
+
+// eslint-disable-next-line import/no-anonymous-default-export
+/**
+ * 事件总线插件
+ */
+// eslint-disable-next-line import/no-anonymous-default-export
+export default {
+  install() {
+    // 事件总线
+    // eslint-disable-next-line no-undef
+    const eventBus = new Vue();
+    /**
+     * ready事件监听
+     * @type {Object.<string, Array[Object.<string, any>]>}
+     * @desc 主键为事件名，值为事件监听对象数组
+     * 监听对象：
+     * 1) isOnce：表示该监听处理方法是否只执行一次，如果只执行一次，则执行后会从监听数组中移除
+     * 2) eventHandler：该监听处理方法
+     * 示例：{ isOnce: true, eventHandler: function (payload) { ... } }
+     */
+
+    const readyListeners = {};
+    /**
+     * ready事件状态
+     * @type {Object.<string, Object.<string, any>>}
+     * @desc 主键为事件名，值为对象类型，表示当前的状态的对象
+     * 状态对象:
+     * 1) isReady: 改事件是否已触发
+     * 2) payload: 事件触发时的参数
+     * 示例：{ isReady: true, payload: {id: 12} }
+     */
+
+    const readyStatus = {};
+    /**
+     * 添加ready事件监听方法(如果事件已触发过则直接执行)
+     * @param eventName 事件名
+     * @param eventHandler 事件监听执行方法，例：function (payload) { ... }
+     * @param isOnce 是否只执行一次（默认为true）
+     */
+    function onReady(eventName, eventHandler, isOnce = true) {
+      // 事件状态
+      let status = readyStatus[eventName];
+      // 如果事件已触发过，则直接执行监听方法
+      if (status && status.isReady) {
+        // console.log('########### 直接执行了监听处理方法', eventHandler)
+        eventHandler(status.payload);
+        if (isOnce) {
+          // 如果此监听只执行一次则不再添加到监听器数组中
+          return;
+        }
+      }
+      /* 将监听对象添加到监听数组 */
+      let listeners = readyListeners[eventName];
+      if (!listeners) {
+        listeners = [];
+        readyListeners[eventName] = listeners;
+      }
+      listeners.push({
+        isOnce, // 是否只执行一次
+        eventHandler, // 事件处理方法
+      });
+    }
+
+    /**
+     * 触发ready事件
+     * @param eventName 事件名
+     * @param payload 事件负载数据
+     */
+    function emitReady(eventName, payload) {
+      // 设置事件状态
+      readyStatus[eventName] = { isReady: true, payload };
+      // 事件的监听数组
+      let listeners = readyListeners[eventName];
+      // 新监听数组（如果有只执行一次的监听器，执行后就移除）
+      let newListener = [];
+      // 执行监听数组中的监听事件
+      if (listeners && listeners.length > 0) {
+        listeners.forEach((listener) => {
+          try {
+            if (!listener.isOnce) {
+              newListener.push(listener);
+            }
+            listener.eventHandler(payload);
+          } catch (e) {
+            console.error(
+              `eventBus 的 ready 事件：${eventName}，执行监听方法失败！`,
+              e
+            );
+          }
+        });
+      }
+      readyListeners[eventName] = newListener;
+    }
+    /**
+     * 移除ready事件中的某一个监听方法
+     * @param eventName 事件名
+     * @param listener 事件监听方法
+     */
+    function removeReadyEventListener(eventName, listener) {
+      if (eventName && listener) {
+        let eventListeners = readyListeners[eventName];
+        if (eventListeners) {
+          let index = -1;
+          for (let i = 0; i < eventListeners.length; i++) {
+            let item = eventListeners[i];
+            if (item.eventHandler === listener) {
+              index = i;
+              break;
+            }
+          }
+          if (index !== -1) {
+            eventListeners.splice(index, 1);
+          }
+        }
+      }
+    }
+    /**
+     * 清除指定ready事件
+     * @param eventName 事件名
+     */
+    function clearReadyEvent(eventName) {
+      delete readyListeners[eventName];
+      delete readyStatus[eventName];
+    }
+    eventBus.$readyListeners = readyListeners;
+    eventBus.$readyStatus = readyStatus;
+    eventBus.$onReady = onReady;
+    eventBus.$emitReady = emitReady;
+    eventBus.$removeReadyEventListener = removeReadyEventListener;
+    eventBus.$clearReadyEvent = clearReadyEvent;
+    // eslint-disable-next-line no-undef
+    Vue.prototype.$eventBus = eventBus;
+  },
+};
+/**
+ * 事件总线类
+ */
+export class EventBus {
+  constructor() {
+    this.eventsContainer = this.eventsContainer || new Map();
+  }
+  /**
+   * 事件订阅
+   * @param {string} type 事件类型|事件名
+   * @param {function} callback 事件回调
+   */
+  on(type, callback) {
+    if (!this.eventsContainer.has(type)) {
+      this.eventsContainer.set(type, [callback]);
+    } else {
+      let callbacks = this.eventsContainer.get(type);
+      if (callbacks.length < 10) callbacks.push(callback);
+      else {
+        callbacks.shift();
+        callbacks.push(callback);
+      }
     }
   }
-  dfs(nums,len,0,[])
-  return result
+  /**
+   * 取消订阅
+   * @param {string} type
+   */
+  off(type) {
+    if (this.eventsContainer.has(type)) this.eventsContainer.delete(type);
+  }
+  /**
+   * 触发事件
+   * @param {string} type
+   */
+  emit(type) {
+    if (this.eventsContainer.has(type)) {
+      let callbacks = this.eventsContainer.get(type);
+      if (Array.isArray(callbacks)) {
+        callbacks.forEach((fn) =>
+          fn.apply(this, Array.prototype.slice.call(arguments, 1))
+        );
+      } else callbacks.apply(this, Array.prototype.slice.call(arguments, 1));
+    } else throw new TypeError("当前事件不存在");
+  }
+  /**
+   * 清空事件总线
+   */
+  clear() {
+    this.eventsContainer.size() > 0
+      ? this.eventsContainer.clear()
+      : (this.eventsContainer = new Map());
+  }
+}
+/**
+ * 二叉搜索树删除最小值节点(最大值相同)
+ * @param {Node} node
+ * @returns
+ */
+export function removeMin(node) {
+  if (node.left == null) {
+    let rightNode = node.right;
+    node.right = null;
+    return rightNode;
+  }
+  node.left = removeMin(node.left);
+  return node;
+}
+/**
+ * 二叉搜索树删除key非叶子结点,假设key一定包含在树中
+ */
+export function removeNode(node, key) {
+  if (node === null) return null;
+  if (node.key > key) {
+    if (node.left) node.left = removeNode(node.left, key);
+    return node;
+  } else if (node.key < key) {
+    if (node.right) node.right = removeNode(node.right, key);
+    return node;
+  } else {
+    // 节点为左空
+    if (!node.left && node.right) {
+      let right = node.right;
+      node.right = null;
+      return right;
+    } else if (!node.right && node.left) {
+      let left = node.left;
+      node.left = null;
+      return left;
+    } else if (node.left && node.right) {
+      // eslint-disable-next-line no-undef
+      let min = minnum(node.right);
+      min.left = node.left;
+      min.right = removeMin(node.right);
+      node.left = node.right = null;
+      return min;
+    }
+  }
+}
+/**
+ * 最大的k个数
+ */
+export function maxKNum(nums, k) {
+  // 法一 快排后取出前kge
+  // 法二 循环k次，每次取出最大值
+  // 法三 最小堆+一遍扫描
+  // 创建最小堆
+  let len = nums.length;
+  if (len <= k) return nums;
+  let minStack = [];
+  for (let i = 0; i < len; i++) {
+    if (minStack.length === 0) minStack.push(nums[i]);
+  }
+}
+const defaultCmp = (x, y) => x > y;
+// 堆类，默认最大堆
+export class Heap {
+  constructor(cmp = defaultCmp) {
+    this.container = [];
+    this.cmp = cmp;
+  }
+  // 插入
+  insert(data) {
+    const { container, cmp } = this;
+    container.push(data);
+    let index = this.size() - 1;
+    while (index) {
+      let parent = (index - 1) >> 1;
+      if (!cmp(container[index], container[parent])) {
+        return;
+      }
+      [container[index], container[parent]] = [
+        container[parent],
+        container[index],
+      ];
+      index = parent;
+    }
+  }
+  // 弹出堆顶，并返回
+  pop() {
+    const { container, cmp } = this;
+    if (!this.size()) {
+      return null;
+    }
+
+    [container[0], container[this.size() - 1]] = [
+      container[this.size() - 1],
+      container[0],
+    ];
+    const res = container.pop();
+    const length = this.size();
+    let index = 0,
+      exchange = index * 2 + 1;
+
+    while (exchange < length) {
+      // // 以最大堆的情况来说：如果有右节点，并且右节点的值大于左节点的值
+      let right = index * 2 + 2;
+      if (right < length && cmp(container[right], container[exchange])) {
+        exchange = right;
+      }
+      if (!cmp(container[exchange], container[index])) {
+        break;
+      }
+      [container[exchange], container[index]] = [
+        container[index],
+        container[exchange],
+      ];
+      index = exchange;
+      exchange = index * 2 + 1;
+    }
+
+    return res;
+  }
+  // 获取堆大小
+  size() {
+    return this.container.length;
+  }
+  // 获取堆顶
+  peek() {
+    if (this.size()) return this.container[0];
+    return null;
+  }
+}
+/**
+ * 手写instance
+ */
+export function _instanceof(left, right) {
+  const baseType = ["string", "number", "boolean", "undefined", "symbol"];
+  if (baseType.includes(typeof left)) {
+    return false;
+  }
+
+  let rn = right.prototype,
+    L = left.__proto__;
+  if (!rn) throw new TypeError("the Right must have prototype");
+  while (L) {
+    if (L === rn) return true;
+    L = L.__proto__;
+  }
+  return false;
 }

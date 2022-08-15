@@ -18,3 +18,9 @@ body {
   background-color: lightblue;
   cursor: pointer;
 }
+/* div {
+  width: 0;
+  height: 0;
+  border: 40px solid;
+  border-color: transparent transparent red;
+} */
